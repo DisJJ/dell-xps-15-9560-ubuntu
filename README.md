@@ -1,6 +1,24 @@
 # dell-xps-15-9560-ubuntu
 Tracking missing features, drivers, workarounds and hacks for the Dell New XPS 15 9560 on Ubuntu Linux
 
+# CPP Development Environment
+```bash
+# Atom
+link="https://atom.io/download/deb"
+wget --quiet "$link" -O atom.deb
+sudo dpkg -i atom.deb
+rm atom.deb
+declare -a arr=("atom-html-preview" "autocomplete-clang" "autocomplete-ctags" "autocomplete-python"   "busy-signal" "gcc-make-run" "language-x86asm" "linter" "linter-clang" "intentions" "linter-gcc" "linter-ui-default" "pdf-view" "sort-lines")
+for package in ${arr[@]}; do
+  sudo apm install "$package"
+done
+if [ -d /media/"$USER"/External ]; then
+sudo cp -ar /media/"$USER"/External/Dell\ XPS\ Files/config.cson ~/.atom/
+fi
+sudo apt-get install clang++-6.0 -y
+sudo chown "$USER" ~/.atom
+
+```
 # Issues
 
 The Linux Kernel 4.10+ does not play nice with the graphics drivers from Nvidia (nvidia-384) as it does not allow the user to boot into the login screen. Using the default kernel in Linux Mint 18.2 Soyna (4.8.0-58-generic) is recommended
