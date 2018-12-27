@@ -41,4 +41,39 @@ linux-headers-VERSION-NUMBER_amd64.deb
 linux-image-VERSION-NUMBER_amd64.deb
 linux-image-extra-VERSION-NUMBER_amd64.deb   # if available
 ```
+# Turning off the graphics card
+
+```bash
+#!/usr/bin/env bash
+
+if [[ $(whoami) != "root" ]]; then
+  echo "[-] Please run as root..."
+  exit
+fi
+
+sudo apt-get install acpi acpi-call-dkms -y
+sudo modprobe acpi_call
+if [[ $(dmesg | grep acpi_call | wc -l) -gt 0 ]]; then
+  echo "[+] Module is successfully attached...."
+fi
+echo '_SB.PCI0.PEG0.PEGP._OFF' | sudo tee /proc/acpi/call
+sudo echo acpi_call > /etc/modules-load.d/acpi_call.conf
+cat <<'EOF' >/usr/lib/systemd/user/dgpu-off.service
+[Unit]
+Description=Power-off dGPU
+After=graphical.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c "echo '\\_SB.PCI0.PEG0.PEGP._OFF' > /proc/acpi/call; cat /proc/acpi/call > /tmp/nvidia-off"
+
+[Install]
+WantedBy=graphical.target
+EOF
+systemctl enable /usr/lib/systemd/user/dgpu-off.service
+sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT=".*"/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash modprobe.blacklist=nouveau i915.preliminary_hw_support=1 acpi_rev_override=5"/g' /etc/default/grub
+sudo update-grub
+reboot
+
+```
 
