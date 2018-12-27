@@ -23,4 +23,22 @@ This script should be able to fix the track pad issues
   sudo gpasswd -a "$USER" input
   libinput-gestures-setup autostart
 ```
+# Battery
+```bash
+  sudo add-apt-repository -y ppa:linrunner/tlp
+  sudo apt-get update
+  sudo apt-get install tlp tlp-rdw -y
+```
+Get better battery life
+
+# Idea
+Webscrape to find the latest kerenel revision from here ---> https://kernel.ubuntu.com/~kernel-ppa/mainline/
+Do a search through that folder for these files
+
+```
+linux-headers-VERSION-NUMBER_all.deb
+linux-headers-VERSION-NUMBER_amd64.deb
+linux-image-VERSION-NUMBER_amd64.deb
+linux-image-extra-VERSION-NUMBER_amd64.deb   # if available
+```
 
