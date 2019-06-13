@@ -13,11 +13,18 @@ for package in ${arr[@]}; do
   sudo apm install "$package"
 done
 if [ -d /media/"$USER"/External ]; then
-sudo cp -ar /media/"$USER"/External/Dell\ XPS\ Files/config.cson ~/.atom/
+  sudo cp -ar /media/"$USER"/External/Dell\ XPS\ Files/config.cson ~/.atom/
 fi
 sudo apt-get install clang++-6.0 -y
 sudo chown "$USER" ~/.atom
 
+# CPP Manuals
+git clone https://github.com/jeaye/stdman.git
+cd stdman
+./configure
+sudo make install
+sudo mandb
+rm -rf stdman/
 ```
 # Issues
 
